@@ -20,18 +20,15 @@ class Game:
         
         self.intro = Intro(self.screen, self.state)
         self.menu = Menu(self.screen, self.state)
-        self.play_game = PlayGame(self.screen, self.state)
-        self.game_over = GameOver(self.screen, self.state)
-        self.pause = PauseGame(self.screen, self.state)
+        self.play_game = PlayGame(self.screen, self.state, )
+        self.game_over = GameOver(self.screen, self.state, self.play_game)
+        self.pause = PauseGame(self.screen, self.state, self.play_game)
         self.states = {'intro': self.intro, 'menu': self.menu, 'play_game': self.play_game, 'game_over': self.game_over, 'pause': self.pause}
         
     def run(self):
         while True: #loop every 1/60 seconds
             self.states[self.state.get_state()].run()
             pygame.display.update()
-
-
-
 
 
 
