@@ -12,7 +12,7 @@ from sound import Sound
 
 BLACK = (0, 0, 0)
 WHITE = (255,255,255)
-YELLOW = (255,250,160)
+BLUE = (0,0,160)
 
 GAME_TIME = 30
 
@@ -36,7 +36,7 @@ class Background:
         
         self.pause_background = image_loader(f'{IMAGE_PATH}pause-pixel_game.png', flip = False, scale = SCREEN_SIZE) 
         
-        self.game_over = image_loader(f'{IMAGE_PATH}gameover.png', flip = False, scale = SCREEN_SIZE) 
+        self.game_over = image_loader(f'{IMAGE_PATH}gameover.png', flip = False, scale = (680, 300)) 
         
         self.button = image_loader(f'{IMAGE_PATH}button.png', flip = False, scale= (250, 75))
 
@@ -128,8 +128,11 @@ class GameOver:
 
         self.play_game = play_game
 
-        self.menuButton = Button(self.screen, 515, 520, 250, 75, "Menu", background.button)
-        self.playAgainButton = Button(self.screen, 515, 380, 250, 75, "Play again", background.button)
+        self.font = pygame.font.Font('fonts/m5x7.ttf', 75)
+    
+
+        self.menuButton = Button(self.screen, 260, 500, 250, 75, "Menu", background.button)
+        self.playAgainButton = Button(self.screen, 770, 500, 250, 75, "Play again", background.button)
 
     def run(self):
         pygame.mouse.set_visible(True)
@@ -138,30 +141,25 @@ class GameOver:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-                
-            # if event.type == pygame.MOUSEBUTTONDOWN:
-            #     if event.button == 1:
-            #         if 285 <= mouse[0] <= 515 and 405 <= mouse[1] <= 488:
-            #             self.state.set_state('play_game')
-            #             # self.play_game.reset_state()
-            #         if 285 <= mouse[0] <= 515 and 510 <= mouse[1] <= 593:
-            #             self.state.set_state('menu')
-            #             # self.play_game.reset_state()
-        
-        self.screen.blit(background.game_over, (0, 0))
+       
+        self.screen.blit(background.game_over, (300, 0))
 
         if self.playAgainButton.draw():
             self.state.set_state('play_game')
 
         if self.menuButton.draw():
             self.state.set_state('menu')
-       
-        score_text = self.font.render("Score: " + str(self.play_game.getScore()), True, WHITE)
-        score_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, 280))
+
+        
+# Please fix
+        # score_text = self.font.render("Score: " + str(self.play_game.getScore()), True, WHITE)
+        score_text = self.font.render("Score: 1", True, BLUE)
+        score_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, 300))
         self.screen.blit(score_text, score_rect)
         
-        missed_text = self.font.render("Missed: " + str(self.play_game.escape_count), True, WHITE)
-        missed_rect = missed_text.get_rect(center=(SCREEN_WIDTH // 2, 330))
+        # missed_text = self.font.render("Missed: " + str(self.play_game.escape_count), True, WHITE)
+        missed_text = self.font.render("Missed: 1", True, BLUE)
+        missed_rect = missed_text.get_rect(center=(SCREEN_WIDTH // 2, 400))
         self.screen.blit(missed_text, missed_rect)
 
 class PauseGame:
@@ -198,6 +196,8 @@ class PauseGame:
 # ---------------   Big Game Play Here =))  --------------------
 # --------------------------------------------------------------
 # --------------------------------------------------------------
+
+#  Test sprite sheet
 from Sprite.spriteSheet import Spritesheet
 door_spritesheet = Spritesheet(f'{IMAGE_PATH}/door/door.png')
 open_frame = [
@@ -219,7 +219,7 @@ class PlayGame:
         self.graves = [(195, 64), (516, 116), (143, 328), (625 , 328), (413, 434), (200 , 540), (571, 596)]
         
 
-        self.doorPositions = [(100, 100)]
+        # self.doorPositions = [(100, 100)]
         
         self.cursor_img = background.crosshair
         self.cursor_rect = self.cursor_img.get_rect()
@@ -239,6 +239,7 @@ class PlayGame:
         pygame.time.set_timer(self.remove_interval, 1000)
         
         self.heartBar = HealthBar(self.screen) 
+        self.ammo_counter = AmmoCounter(self.screen, 900, 650, 340, 50, max_ammo=10)
         
         
     def drawPeople(self):
@@ -276,6 +277,14 @@ class PlayGame:
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
+
+
+                    # Test heartBar and ammo counter
+                    self.heartBar.lose_heart()
+                    self.ammo_counter.shoot()
+
+
+
                     # self.cursor_img = background.click_sword
                     click_position = pygame.mouse.get_pos()
                     if self.pause_icon_rect.collidepoint(click_position):
@@ -284,6 +293,16 @@ class PlayGame:
                         self.handle_click(click_position)
                         # if not TURN_OFF_SOUND:
                         #     sound.turnOn('crosshair')
+
+            #Test reset ammo
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                self.ammo_counter.reset()
+
+            # Test Game over
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_x:
+                self.state.set_state('game_over')
+
+
             else:
                 self.cursor_img = background.crosshair
                     
@@ -323,7 +342,12 @@ class PlayGame:
         self.screen.blit(self.pause_icon, (740, 15))
         self.drawPeople()
 
+        # Heart Bar test
+
         self.heartBar.draw()
+        self.ammo_counter.draw()
+
+        # Ammo Counter test
         
         # self.displayScore()
         # self.displayMissed()
