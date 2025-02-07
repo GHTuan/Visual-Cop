@@ -215,8 +215,8 @@ class PlayGame:
         self.screen = screen
         self.state = state
 
-        # self.period = GAME_TIME
-        # self.countdown = self.period
+        self.period = GAME_TIME
+        self.countdown = self.period
 
         self.graves = [(195, 64), (516, 116), (143, 328), (625 , 328), (413, 434), (200 , 540), (571, 596)]
         
@@ -307,11 +307,11 @@ class PlayGame:
                 # self.removeZombie()
                 pass
                 
-            # if event.type == pygame.USEREVENT:
-            #     self.countdown -= 1
-            #     if self.countdown <= 0:
-            #         # self.zombies.clear()
-            #         self.state.set_state('game_over')
+            if event.type == pygame.USEREVENT:
+                self.countdown -= 1
+                if self.countdown <= 0:
+                    # self.zombies.clear()
+                    self.state.set_state('game_over')
             
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_p or event.key == pygame.K_SPACE:
@@ -338,7 +338,7 @@ class PlayGame:
         self.screen.blit(frame, (300,300))
 
         self.screen.blit(self.pause_icon, (740, 15))
-        self.drawPeople()
+        # self.drawPeople()
 
         # Heart Bar test
 
