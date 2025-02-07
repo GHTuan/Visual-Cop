@@ -1,7 +1,7 @@
 import pygame,sys
 from pygame.locals import *
 
-from param import SCREEN_WIDTH,SCREEN_HEIGHT,GAME_NAME
+from param import SCREEN_WIDTH,SCREEN_HEIGHT,FPS,GAME_NAME
 from utils import StateManager
 
 from gameState import PlayGame, Intro, Menu, GameOver, PauseGame
@@ -26,9 +26,10 @@ class Game:
         self.states = {'intro': self.intro, 'menu': self.menu, 'play_game': self.play_game, 'game_over': self.game_over, 'pause': self.pause}
         
     def run(self):
-        while True: #loop every 1/60 seconds
+        while True: 
             self.states[self.state.get_state()].run()
             pygame.display.update()
+            self.clock.tick(FPS)
 
 
 
