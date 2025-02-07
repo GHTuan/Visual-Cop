@@ -6,6 +6,8 @@ from param import SCREEN_WIDTH, SCREEN_HEIGHT, GAME_NAME
 from utils import image_loader
 
 from people import Thief1
+from spawner import Spawner
+from gun import Gun
 
 from UI import Button
 
@@ -21,7 +23,7 @@ window = pygame.display.set_mode(SCREEN_SIZE)
 
 class Background:
     def __init__(self):
-        self.background = image_loader('Sprite/Temp/background.jpg', flip = False, scale = SCREEN_SIZE) # Background image
+        self.background = image_loader('Sprite/Temp/building1.png', flip = False, scale = SCREEN_SIZE) # Background image
         self.menu = image_loader('Sprite/Temp/menu.png', flip = False, scale = SCREEN_SIZE)  # Menu image
         self.sword = image_loader('Sprite/Temp/sword.png', flip = False, scale = (15,15))  # Sword image
         self.click_sword = image_loader('Sprite/Temp/click_sword.png', flip = False, scale = (15,15)) # Click sword image
@@ -230,7 +232,7 @@ class PlayGame:
         self.state = state
         self.period = GAME_TIME
         self.countdown = self.period
-        self.graves = [(195, 64), (516, 116), (143, 328), (625 , 328), (413, 434), (200 , 540), (571, 596)]
+        #self.graves = [(195, 64), (516, 116), (143, 328), (625 , 328), (413, 434), (200 , 540), (571, 596)]
         
         self.cursor_img = background.sword
         self.cursor_rect = self.cursor_img.get_rect()
@@ -245,36 +247,30 @@ class PlayGame:
         self.remove_interval = 2
         self.escape_count = 0
         
+        self.spawners = [Spawner(screen)]
+        self.gun = Gun(5)
+        
         pygame.time.set_timer(self.generate_zombie, self.appear_interval)
         pygame.time.set_timer(pygame.USEREVENT, 1000)
         pygame.time.set_timer(self.remove_interval, 1000)
         
         
-        
-    def drawPeople(self):
-        for person in self.people:
-            person.update()
-            
-            
-    def spawn_new_people(self):
-        new_position = ()
 
-        index = random.randint(0, 6)
-        new_position = self.graves[index]
-
-        return new_position
     
     def handle_click(self,position):
         print('Click at: ', position[0], position[1])
         
-        for person in self.people:
-            if person.check_colision(position):
-                self.score += 1
-                self.people.remove(person)
-                break
+        print(self.gun.get_current_ammo())
+
+        if self.gun.fire():
+            for spawner in self.spawners:
+                if spawner.handle_click(position):
+                    self.score += 1
+        else:
+            print("Out of ammo!")
         
-        # TODO
-        pass
+
+        
     
     def run(self):
         for event in pygame.event.get():
@@ -295,10 +291,7 @@ class PlayGame:
             else:
                 self.cursor_img = background.sword
                     
-            if event.type == self.generate_zombie:
-                if len(self.people) < 7:
-                    new_position = self.spawn_new_people()
-                    self.people.append(Thief1(self.screen ,new_position[0], new_position[1], self.screen))
+           
             if event.type == self.remove_interval:
                 # self.removeZombie()
                 pass
@@ -306,27 +299,32 @@ class PlayGame:
             if event.type == pygame.USEREVENT:
                 self.countdown -= 1
                 if self.countdown <= 0:
-                    self.zombies.clear()
+                    self.people.clear()
                     self.state.set_state('game_over')
             
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_p or event.key == pygame.K_SPACE:
                     self.state.set_state('pause')
+                if event.key == pygame.K_r:
+                    self.gun.reload()
+            
+            for spawner in self.spawners:
+                spawner.update(event)
         
         self.screen.blit(background.background, (0, 0))
         self.screen.blit(self.pause_icon, (740, 15))
-        self.drawPeople()
         
         # self.displayScore()
         # self.displayMissed()
         # self.displayTime()
+        for spawner in self.spawners:
+            spawner.draw()
         
         pygame.mouse.set_visible(False)
         self.cursor_rect.center = pygame.mouse.get_pos()
         self.screen.blit(self.cursor_img, self.cursor_rect)
         
         
-
     
     def reset_game(self):
         pass
