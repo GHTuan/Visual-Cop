@@ -23,13 +23,14 @@ window = pygame.display.set_mode(SCREEN_SIZE)
 class Background:
     def __init__(self):
         self.background = image_loader(f'{IMAGE_PATH}background.png', flip = False, scale = SCREEN_SIZE)
+        self.building = image_loader(f'{IMAGE_PATH}building1.png', flip = False, scale = (1000, 480))
         
         self.menu = image_loader(f'{IMAGE_PATH}background.png', flip = False, scale = SCREEN_SIZE)
         self.logo = image_loader(f'{IMAGE_PATH}logo.png', flip = False, scale = (480, 300))
         
-        self.crosshair = image_loader('Sprite/crosshair.png', flip=False, scale=(100, 100)).convert_alpha()
+        self.crosshair = image_loader('Sprite/crosshair.png', flip=False, scale=(25, 25))
         
-        self.click_sword = image_loader('Sprite/Temp/click_sword.png', flip = False, scale = (15, 15))
+        # self.click_sword = image_loader('Sprite/Temp/click_sword.png', flip = False, scale = (15, 15))
         
         self.pause = image_loader(f'{IMAGE_PATH}pause.png', flip = False, scale = (20, 20)) 
         
@@ -197,14 +198,28 @@ class PauseGame:
 # ---------------   Big Game Play Here =))  --------------------
 # --------------------------------------------------------------
 # --------------------------------------------------------------
+from Sprite.spriteSheet import Spritesheet
+door_spritesheet = Spritesheet(f'{IMAGE_PATH}/door/door.png')
+open_frame = [
+    door_spritesheet.parse_sprite('open')
+]
+close_frame = [
+    door_spritesheet.parse_sprite('close')
+]
+
 
 class PlayGame:
     def __init__(self, screen, state):
         self.screen = screen
         self.state = state
-        self.period = GAME_TIME
-        self.countdown = self.period
+
+        # self.period = GAME_TIME
+        # self.countdown = self.period
+
         self.graves = [(195, 64), (516, 116), (143, 328), (625 , 328), (413, 434), (200 , 540), (571, 596)]
+        
+
+        self.doorPositions = [(100, 100)]
         
         self.cursor_img = background.crosshair
         self.cursor_rect = self.cursor_img.get_rect()
@@ -261,7 +276,7 @@ class PlayGame:
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    self.cursor_img = background.click_sword
+                    # self.cursor_img = background.click_sword
                     click_position = pygame.mouse.get_pos()
                     if self.pause_icon_rect.collidepoint(click_position):
                         self.state.set_state('pause')
@@ -280,17 +295,31 @@ class PlayGame:
                 # self.removeZombie()
                 pass
                 
-            if event.type == pygame.USEREVENT:
-                self.countdown -= 1
-                if self.countdown <= 0:
-                    # self.zombies.clear()
-                    self.state.set_state('game_over')
+            # if event.type == pygame.USEREVENT:
+            #     self.countdown -= 1
+            #     if self.countdown <= 0:
+            #         # self.zombies.clear()
+            #         self.state.set_state('game_over')
             
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_p or event.key == pygame.K_SPACE:
                     self.state.set_state('pause')
         
         self.screen.blit(background.background, (0, 0))
+
+
+        screen_rect = self.screen.get_rect()
+        building_rect = background.building.get_rect()
+
+        # Tính toán tọa độ để đặt building chính giữa screen
+        building_rect.center = screen_rect.center
+
+        # Vẽ hình ảnh building vào screen
+        self.screen.blit(background.building, building_rect.topleft)
+
+        frame = pygame.transform.scale(close_frame[int(0)],(100,100))
+        self.screen.blit(frame, (300,300))
+
         self.screen.blit(self.pause_icon, (740, 15))
         self.drawPeople()
 
