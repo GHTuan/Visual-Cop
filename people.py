@@ -44,6 +44,7 @@ class People:
         else:
             print("Miss")
             return False
+            return False
         
         
     def update(self):
