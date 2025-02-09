@@ -262,9 +262,6 @@ class PlayGame:
         self.screen = screen
         self.state = state
 
-        self.period = GAME_TIME
-        self.countdown = self.period
-
         self.graves = [(195, 64), (516, 116), (143, 328), (625 , 328), (413, 434), (200 , 540), (571, 596)]
         
         self.cursor_img = background.crosshair
@@ -332,12 +329,6 @@ class PlayGame:
             if event.type == self.remove_interval:
                 # self.removeZombie()
                 pass
-                
-            if event.type == pygame.USEREVENT:
-                self.countdown -= 1
-                if self.countdown <= 0:
-                    # self.zombies.clear()
-                    self.state.set_state('game_over')
             
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_p or event.key == pygame.K_SPACE:
