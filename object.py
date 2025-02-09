@@ -4,10 +4,8 @@ from param import IMAGE_PATH
 from Sprite.spriteSheet import Spritesheet
 from animationFrame import AnnimationFrame
 
-# Load spritesheet
 doorSpriteSheet = Spritesheet(f'{IMAGE_PATH}door/door.png')
 
-# Định nghĩa các frame cho trạng thái mở và đóng
 open_frames = [
     # doorSpriteSheet.parse_sprite('close'),
     doorSpriteSheet.parse_sprite('open')
@@ -29,7 +27,6 @@ class Door:
         self.x, self.y = x, y
         self.width, self.height = width, height
         
-        # Dictionary chứa animation cho từng trạng thái
         self.animations = {
             DoorState.OPEN: AnnimationFrame(open_frames, interval=500),
             DoorState.CLOSE: AnnimationFrame(close_frames, interval=500)

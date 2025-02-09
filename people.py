@@ -39,8 +39,10 @@ class People:
         # center = (self.x + margin[0], self.y + margin[1])
         if position[0] > self.x and position[1] > self.y and position[0] < self.x + image_size[0] and position[1] < self.y + image_size[1]:
             print("Hit")
+            return True
         else:
             print("Miss")
+            return False
         
         
     def update(self):
