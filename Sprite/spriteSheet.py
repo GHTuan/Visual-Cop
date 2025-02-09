@@ -3,22 +3,22 @@ import json
 
 class Spritesheet:
     def __init__(self, filePath):
-        pygame.display.init()
         self.filePath = filePath
         self.sprite_sheet = pygame.image.load(filePath).convert_alpha()
-        self.meta_data = self.filePath.replace('png', 'json')
-        with open(self.meta_data) as f:
+        json_path = self.filePath.replace('.png', '.json')
+        with open(json_path) as f:
             self.data = json.load(f)
-        f.close()
 
-    def get_sprite(self, x, y, w, h):
+    def get_sprite(self, x, y, w, h, flip = False):
         sprite = pygame.Surface((w, h))
         sprite.set_colorkey((0,0,0), pygame.SRCALPHA)
         sprite.blit(self.sprite_sheet,(0, 0),(x, y, w, h))
-        return sprite
+        return pygame.transform.flip(sprite, True, False) if flip else sprite
 
     def parse_sprite(self, name):
-        sprite = self.data[name]['frame']
-        x, y, w, h = sprite["x"], sprite["y"], sprite["w"], sprite["h"]
-        image = self.get_sprite(x, y, w, h)
-        return image
+        sprite_info = self.data.get(name)
+        if not sprite_info:
+            raise ValueError(f"Sprite '{name}' không tồn tại trong metadata.")
+        
+        frame = sprite_info["frame"]
+        return self.get_sprite(frame["x"], frame["y"], frame["w"], frame["h"], sprite_info.get("flip", False))

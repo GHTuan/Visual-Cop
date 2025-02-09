@@ -6,7 +6,7 @@ from param import SCREEN_WIDTH, SCREEN_HEIGHT, GAME_NAME, IMAGE_PATH
 from utils import image_loader
 
 from people import Thief1
-from spawner import Spawner
+
 from gun import Gun
 
 from UI import Button, HealthBar, AmmoCounter
@@ -23,6 +23,7 @@ SCREEN_SIZE = ((SCREEN_WIDTH, SCREEN_HEIGHT))
 window = pygame.display.set_mode(SCREEN_SIZE)
 
 from object import Door, DoorState
+from spawner import Spawner
 
 class Background:
     def __init__(self):
@@ -104,11 +105,14 @@ class Menu:
    
     # Begin Test
         self.heartBar = HealthBar(self.screen) 
-        self.ammo_counter = AmmoCounter(self.screen, 900, 650, 340, 50, max_ammo=10)
-        self.current_ammo = 10
+        # self.ammo_counter = AmmoCounter(self.screen, 900, 650, 340, 50, max_ammo=10)
+        # self.current_ammo = 10
         
         self.door = Door(screen, x=200, y=200, width=100, height=200)
         self.door_state = DoorState.CLOSE
+
+        # Khởi tạo Gun
+        self.gun = Gun(screen, ammo_capacity=10)
 
     # End Test
 
@@ -132,6 +136,16 @@ class Menu:
                 self.door_state = DoorState.CLOSE
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_m:  
                 self.current_ammo -= 1
+
+
+            #Test gun
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                    self.gun.reload()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                if self.gun.fire():
+                    print("Đã bắn!")
+                else:
+                    print("Hết đạn, nhấn 'R' để nạp!")
             # End Test
 
         self.screen.blit(background.menu, (0, 0))
@@ -156,10 +170,13 @@ class Menu:
 
 
         # Ammo Counter test
-        self.ammo_counter.draw(current_ammo=self.current_ammo)
+        # self.ammo_counter.draw(current_ammo=self.current_ammo)
 
         # Vẽ cửa dựa trên trạng thái hiện tại
         self.door.draw(self.door_state)
+
+        # Gun
+        self.gun.draw_ammo()
 
     # End Test
 
@@ -263,8 +280,8 @@ class PlayGame:
         self.remove_interval = 2
         self.escape_count = 0
         
-        self.spawners = [Spawner(screen)]
-        self.gun = Gun(5)
+        self.spawners = [Spawner(screen), Spawner(screen, floor=1)]
+        self.gun = Gun(self.screen, 5)
         
         pygame.time.set_timer(self.generate_zombie, self.appear_interval)
         pygame.time.set_timer(pygame.USEREVENT, 1000)

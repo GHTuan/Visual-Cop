@@ -2,6 +2,7 @@ import pygame
 import random
 
 from people import Thief1 
+from object import Door, DoorState
 
 
 
@@ -12,7 +13,8 @@ class SpawnPoint:
         self.y = y
         self.max_slot = slot
         self.slot = [] 
-        self.open = False      
+        self.open = DoorState.OPEN
+        self.door = Door(self.screen, x, y, 45, 65)    
     def not_full(self):
         return len(self.slot) < self.max_slot
     def add_slot(self, person):
@@ -22,7 +24,7 @@ class SpawnPoint:
     def remove_slot(self, person):
         self.slot.remove(person)
     def draw(self):
-        pass
+        self.door.draw(self.open)
         #TODO
     def get_cordinates(self):
         return self.x, self.y

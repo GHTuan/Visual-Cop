@@ -2,53 +2,108 @@
     "spawn1":
     {
         "frame": {"x":0,"y":0,"w":24,"h":24},
+        "flip": false,
         "sourceSize": {"w": 24, "h": 24}
     },
     "spawn2":
     {
-        "frame": {"x":24,"y":0,"w":24,"h":24},
+        "frame": {"x":0,"y":0,"w":24,"h":24},
+        "flip": true,
         "sourceSize": {"w": 24, "h": 24}
     },
+    "spawn3":
+    {
+        "frame": {"x":24,"y":0,"w":24,"h":24},
+        "flip": false,
+        "sourceSize": {"w": 24, "h": 24}
+    },
+
+
+
     "idle1":
     {
         "frame": {"x":0,"y":0,"w":24,"h":24},
+        "flip": false,
         "sourceSize": {"w": 24, "h": 24}
     },
     "idle2":
     {
-        "frame": {"x":24,"y":0,"w":24,"h":24},
+        "frame": {"x":0,"y":0,"w":24,"h":24},
+        "flip": true,
         "sourceSize": {"w": 24, "h": 24}
     },
-    "run1":
+
+
+
+    "right_run1":
     {
         "frame": {"x":0,"y":0,"w":24,"h":24},
+        "flip": false,        
         "sourceSize": {"w": 24, "h": 24}
     },
-    "run2":
+    "right_run2":
     {
         "frame": {"x":24,"y":0,"w":24,"h":24},
+        "flip": false,
         "sourceSize": {"w": 24, "h": 24}
     },
-    "run3":
+    "right_run3":
     {
         "frame": {"x":48,"y":0,"w":24,"h":24},
+        "flip": false,
         "sourceSize": {"w": 24, "h": 24}
     },
-    "run4":
+    "right_run4":
     {
         "frame": {"x":72,"y":0,"w":24,"h":24},
+        "flip": false,
         "sourceSize": {"w": 24, "h": 24}
     },
+
+
+
+    "left_run1":
+    {
+        "frame": {"x":0,"y":0,"w":24,"h":24},
+        "flip": true,        
+        "sourceSize": {"w": 24, "h": 24}
+    },
+    "left_run2":
+    {
+        "frame": {"x":24,"y":0,"w":24,"h":24},
+        "flip": true,
+        "sourceSize": {"w": 24, "h": 24}
+    },
+    "left_run3":
+    {
+        "frame": {"x":48,"y":0,"w":24,"h":24},
+        "flip": true,
+        "sourceSize": {"w": 24, "h": 24}
+    },
+    "left_run4":
+    {
+        "frame": {"x":72,"y":0,"w":24,"h":24},
+        "flip": true,
+        "sourceSize": {"w": 24, "h": 24}
+    },
+
+
+
     "shoot1":
     {
         "frame": {"x":0,"y":24,"w":24,"h":24},
+        "flip": false,
         "sourceSize": {"w": 24, "h": 24}
     },
     "shoot2":
     {
         "frame": {"x":24,"y":24,"w":24,"h":24},
+        "flip": false,
         "sourceSize": {"w": 24, "h": 24}
     },
+
+
+    
     "dead1":
     {
         "frame": {"x":0,"y":48,"w":24,"h":24},
