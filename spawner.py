@@ -35,9 +35,9 @@ class Spawner:
         self.max_interval = spawn_max_interval
         self.remove_interval = remove_interval
         if floor == 0:
-            self.spawnpoint = [SpawnPoint(screen, 625, 328)]
+            self.spawnpoint = [SpawnPoint(screen, 333, 495),SpawnPoint(screen, 623, 495),SpawnPoint(screen, 912, 495)]
         elif floor == 1:
-            self.spawnpoint = []
+            self.spawnpoint = [SpawnPoint(screen, 333, 305),SpawnPoint(screen, 623, 305),SpawnPoint(screen, 912, 305)]
         else:
             print("Invalid floor") 
         
