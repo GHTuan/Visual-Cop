@@ -6,7 +6,7 @@ from param import SCREEN_WIDTH, SCREEN_HEIGHT, GAME_NAME, IMAGE_PATH
 from utils import image_loader
 
 from people import Thief1
-from spawner import Spawner
+
 from gun import Gun
 
 from UI import Button, HealthBar, AmmoCounter
@@ -21,6 +21,9 @@ GAME_TIME = 30
 SCREEN_SIZE = ((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 window = pygame.display.set_mode(SCREEN_SIZE)
+
+from object import Door, DoorState
+from spawner import Spawner
 
 class Background:
     def __init__(self):
@@ -100,12 +103,50 @@ class Menu:
         self.volumeButton = Button(self.screen, 500, 514, 250, 75, "Volume: On", background.button)
         self.quitButton = Button(self.screen, 900, 515, 250, 75, "Quit Game", background.button)
    
+    # Begin Test
+        self.heartBar = HealthBar(self.screen) 
+        # self.ammo_counter = AmmoCounter(self.screen, 900, 650, 340, 50, max_ammo=10)
+        # self.current_ammo = 10
+        
+        self.door = Door(screen, x=200, y=200, width=100, height=200)
+        self.door_state = DoorState.CLOSE
+
+        # Khởi tạo Gun
+        self.gun = Gun(screen, ammo_capacity=10)
+
+    # End Test
+
     def run(self):
               
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            
+            # Begin Test
+
+            # Test Game over
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_x:
+                self.state.set_state('game_over')
+
+            # Test Door
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_o:  # Nhấn 'O' để mở cửa
+                self.door_state = DoorState.OPEN
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_c:  # Nhấn 'C' để đóng cửa
+                self.door_state = DoorState.CLOSE
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_m:  
+                self.current_ammo -= 1
+
+
+            #Test gun
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                    self.gun.reload()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                if self.gun.fire():
+                    print("Đã bắn!")
+                else:
+                    print("Hết đạn, nhấn 'R' để nạp!")
+            # End Test
 
         self.screen.blit(background.menu, (0, 0))
         self.screen.blit(background.logo, (400, 100))
@@ -120,7 +161,24 @@ class Menu:
             sys.exit()
         
         window.blit(self.screen, (0,0))
-        pygame.display.update()
+
+
+    # Begin Test
+        # Heart Bar test
+
+        self.heartBar.draw(2)
+
+
+        # Ammo Counter test
+        # self.ammo_counter.draw(current_ammo=self.current_ammo)
+
+        # Vẽ cửa dựa trên trạng thái hiện tại
+        self.door.draw(self.door_state)
+
+        # Gun
+        self.gun.draw_ammo()
+
+    # End Test
 
 
 class GameOver:
@@ -199,17 +257,6 @@ class PauseGame:
 # --------------------------------------------------------------
 # --------------------------------------------------------------
 
-#  Test sprite sheet
-from Sprite.spriteSheet import Spritesheet
-door_spritesheet = Spritesheet(f'{IMAGE_PATH}/door/door.png')
-open_frame = [
-    door_spritesheet.parse_sprite('open')
-]
-close_frame = [
-    door_spritesheet.parse_sprite('close')
-]
-
-
 class PlayGame:
     def __init__(self, screen, state):
         self.screen = screen
@@ -219,9 +266,6 @@ class PlayGame:
         self.countdown = self.period
 
         self.graves = [(195, 64), (516, 116), (143, 328), (625 , 328), (413, 434), (200 , 540), (571, 596)]
-        
-
-        # self.doorPositions = [(100, 100)]
         
         self.cursor_img = background.crosshair
         self.cursor_rect = self.cursor_img.get_rect()
@@ -236,16 +280,13 @@ class PlayGame:
         self.remove_interval = 2
         self.escape_count = 0
         
-        self.spawners = [Spawner(screen)]
-        self.gun = Gun(5)
+        self.spawners = [Spawner(screen), Spawner(screen, floor=1)]
+        self.gun = Gun(self.screen, 5)
         
         pygame.time.set_timer(self.generate_zombie, self.appear_interval)
         pygame.time.set_timer(pygame.USEREVENT, 1000)
         pygame.time.set_timer(self.remove_interval, 1000)
-        
-        self.heartBar = HealthBar(self.screen) 
-        self.ammo_counter = AmmoCounter(self.screen, 900, 650, 340, 50, max_ammo=10)
-        
+
 
     
     def handle_click(self,position):
@@ -274,13 +315,6 @@ class PlayGame:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
 
-
-                    # Test heartBar and ammo counter
-                    self.heartBar.lose_heart()
-                    self.ammo_counter.shoot()
-
-
-
                     # self.cursor_img = background.click_sword
                     click_position = pygame.mouse.get_pos()
                     if self.pause_icon_rect.collidepoint(click_position):
@@ -289,14 +323,6 @@ class PlayGame:
                         self.handle_click(click_position)
                         # if not TURN_OFF_SOUND:
                         #     sound.turnOn('crosshair')
-
-            #Test reset ammo
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
-                self.ammo_counter.reset()
-
-            # Test Game over
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_x:
-                self.state.set_state('game_over')
 
 
             else:
@@ -334,18 +360,9 @@ class PlayGame:
         # Vẽ hình ảnh building vào screen
         self.screen.blit(background.building, building_rect.topleft)
 
-        frame = pygame.transform.scale(close_frame[int(0)],(100,100))
-        self.screen.blit(frame, (300,300))
-
         self.screen.blit(self.pause_icon, (740, 15))
         # self.drawPeople()
 
-        # Heart Bar test
-
-        self.heartBar.draw()
-        self.ammo_counter.draw()
-
-        # Ammo Counter test
         
         # self.displayScore()
         # self.displayMissed()

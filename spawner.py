@@ -2,6 +2,7 @@ import pygame
 import random
 
 from people import Thief1 
+from object import Door, DoorState
 
 
 
@@ -12,7 +13,8 @@ class SpawnPoint:
         self.y = y
         self.max_slot = slot
         self.slot = [] 
-        self.open = False      
+        self.open = DoorState.OPEN
+        self.door = Door(self.screen, x, y, 45, 65)    
     def not_full(self):
         return len(self.slot) < self.max_slot
     def add_slot(self, person):
@@ -22,7 +24,7 @@ class SpawnPoint:
     def remove_slot(self, person):
         self.slot.remove(person)
     def draw(self):
-        pass
+        self.door.draw(self.open)
         #TODO
     def get_cordinates(self):
         return self.x, self.y
@@ -35,9 +37,9 @@ class Spawner:
         self.max_interval = spawn_max_interval
         self.remove_interval = remove_interval
         if floor == 0:
-            self.spawnpoint = [SpawnPoint(screen, 625, 328)]
+            self.spawnpoint = [SpawnPoint(screen, 333, 495),SpawnPoint(screen, 623, 495),SpawnPoint(screen, 912, 495)]
         elif floor == 1:
-            self.spawnpoint = []
+            self.spawnpoint = [SpawnPoint(screen, 333, 305),SpawnPoint(screen, 623, 305),SpawnPoint(screen, 912, 305)]
         else:
             print("Invalid floor") 
         

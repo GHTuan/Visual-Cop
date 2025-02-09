@@ -3,6 +3,11 @@ from enum import Enum
 import random
 
 from animationFrame import PeopleAnimationFrame
+from param import IMAGE_PATH
+
+from Sprite.spriteSheet import Spritesheet
+
+# thiefSpriteSheet = Spritesheet(f'{IMAGE_PATH}thief/npc_thief-sheet.png')
 
 
 class PeopleState(Enum):

@@ -1,12 +1,14 @@
 {
     "close":
     {
-        "frame": {"x":0,"y":0,"w":16,"h":24},
-        "sourceSize": {"w": 24, "h": 16}
+        "frame": {"x":3,"y":0,"w":13,"h":24},
+        "flip": false,
+        "sourceSize": {"w": 13, "h": 24}
     },
     "open":
     {
-        "frame": {"x":36,"y":0,"w":4,"h":24},
-        "sourceSize": {"w": 4, "h": 24}
+        "frame": {"x":16,"y":0,"w":16,"h":24},
+        "flip": false,
+        "sourceSize": {"w": 16, "h": 24}
     }
 }
