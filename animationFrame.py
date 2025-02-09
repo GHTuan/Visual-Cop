@@ -1,9 +1,29 @@
 from utils import image_loader
 
 
-placeholder = [
-    image_loader('Sprite/Temp/placeholder.jpg',flip = False, scale = (30 , 30)),
-    image_loader('Sprite/Temp/placeholder2.jpg',flip = False, scale = (30 , 30)),
+spawn_frame_list = [
+    image_loader('Sprite/spawn1.jpg',flip = False, scale = (24 , 24)),
+    image_loader('Sprite/spawn2.jpg',flip = False, scale = (24 , 24)),
+]
+
+idle_frame_list = [
+    image_loader('Sprite/idle1.jpg',flip = False, scale = (24 , 24)),
+    image_loader('Sprite/idle2.jpg',flip = False, scale = (24 , 24)),
+]
+
+run_frame_list = [
+    image_loader('Sprite/run1.jpg',flip = False, scale = (24 , 24)),
+    image_loader('Sprite/run2.jpg',flip = False, scale = (24 , 24)),
+]
+
+dead_frame_list = [
+    image_loader('Sprite/dead1.jpg',flip = False, scale = (24 , 24)),
+    image_loader('Sprite/dead2.jpg',flip = False, scale = (24 , 24)),
+]
+
+escape_frame_list = [
+    image_loader('Sprite/escape1.jpg',flip = False, scale = (24 , 24)),
+    image_loader('Sprite/escape2.jpg',flip = False, scale = (24 , 24)),
 ]
 
 
@@ -29,7 +49,7 @@ class AnnimationFrame:
         
 
 class PeopleAnimationFrame:
-    def __init__(self,spawn_frame = placeholder, idle_frame = None,run_frame = None,dead_frame = None,escape_frame = None):
+    def __init__(self,spawn_frame = spawn_frame_list, idle_frame = idle_frame_list,run_frame = run_frame_list,dead_frame = dead_frame_list,escape_frame = escape_frame_list):
         self.spawn_frame = AnnimationFrame(spawn_frame)
         self.idle_frame = AnnimationFrame(idle_frame)
         self.run_frame = AnnimationFrame(run_frame)
