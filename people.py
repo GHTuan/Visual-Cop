@@ -1,5 +1,6 @@
 import pygame
 from enum import Enum
+import random
 
 from animationFrame import PeopleAnimationFrame
 
@@ -24,6 +25,15 @@ class People:
         self.annimation = PeopleAnimationFrame()
         self.screen = screen
         self.is_dead = False
+        self.state_timer_start = 0
+        self.state_timer_end = random.randint(2000, 5000)
+        self.check_x_moved = False
+        self.check_y_moved = False
+        self.direction = random.choice([-1, 1])
+        self.target_x = 0
+        self.target_y = 0
+        self.move_speed = 2 
+        self.in_road = False
     
     def change_state(self, new_state):
         self.state = new_state
@@ -44,20 +54,56 @@ class People:
         else:
             print("Miss")
             return False
-            return False
         
         
     def update(self):
-        #TODO
         if self.state == PeopleState.RUN:
-            # i need to change self.position here!!!
-            self.x += 10
+            if not self.check_y_moved:
+                if self.y >= 426:  # Floor 1
+                    self.target_y = 630
+                    self.check_y_moved = True  
+                else:  # Floor 2
+                    self.target_y = 385
+                    if self.check_x_moved:
+                        self.target_y = 630
+                    else:
+                        if self.x >= 174 and self.x <= 1100:
+                            if self.direction == -1:
+                                self.target_x = 174
+                            elif self.direction == 1:
+                                self.target_x = 1100
+                            self.check_x_moved = True 
+
+                # self.check_y_moved = True  
+
+            #For render movement
+            if self.y < self.target_y:
+                self.y += self.move_speed
+                if self.y > self.target_y:  
+                    self.y = self.target_y
+            elif self.x < self.target_x:
+                self.x += self.move_speed
+                if self.x > self.target_x:  
+                    self.x = self.target_x
+            elif self.x > self.target_x:
+                self.x -= self.move_speed
+                if self.x < self.target_x:  
+                    self.x = self.target_x
+            else:
+                self.in_road = True
+
+            if self.check_y_moved and self.in_road:
+            # Move left or right
+                self.x += self.direction * 2 
 
         self.draw()
             
     def draw(self): # call by update function
                     # for draw anmation only
         #TODO
+
+        current_clock_time = pygame.time.get_ticks()
+
         if self.state == PeopleState.SPAWN:
             # if self.annimation.get_curent_state().get_current_frame() < len(self.annimation.spawn_frame):
             self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
@@ -65,8 +111,14 @@ class People:
                 
             # else:
             # if self.annimation.get_curent_state().timer > 3000:
-            self.change_state(PeopleState.IDLE)
-            self.annimation.set_idle_frame()
+            if self.state_timer_start == 0:
+                self.state_timer_start = current_clock_time
+
+            if current_clock_time - self.state_timer_start >= self.state_timer_end:
+            # if current_clock_time - self.state_timer_start >= 999000:
+                self.change_state(PeopleState.IDLE)
+                self.annimation.set_idle_frame()
+                self.state_timer_start = 0
 
         elif self.state == PeopleState.IDLE:
             ###
