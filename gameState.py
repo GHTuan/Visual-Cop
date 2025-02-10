@@ -9,7 +9,7 @@ from people import Thief1
 
 from gun import Gun
 
-from UI import Button, HealthBar, AmmoCounter
+from UI import Button, HealthBar
 from sound import Sound
 
 BLACK = (0, 0, 0)
@@ -104,15 +104,6 @@ class Menu:
         self.quitButton = Button(self.screen, 900, 515, 250, 75, "Quit Game", background.button)
    
     # Begin Test
-        self.heartBar = HealthBar(self.screen) 
-        # self.ammo_counter = AmmoCounter(self.screen, 900, 650, 340, 50, max_ammo=10)
-        # self.current_ammo = 10
-        
-        self.door = Door(screen, x=200, y=200, width=100, height=200)
-        self.door_state = DoorState.CLOSE
-
-        # Khởi tạo Gun
-        self.gun = Gun(screen, ammo_capacity=10)
 
     # End Test
 
@@ -125,27 +116,6 @@ class Menu:
             
             # Begin Test
 
-            # Test Game over
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_x:
-                self.state.set_state('game_over')
-
-            # Test Door
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_o:  # Nhấn 'O' để mở cửa
-                self.door_state = DoorState.OPEN
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_c:  # Nhấn 'C' để đóng cửa
-                self.door_state = DoorState.CLOSE
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_m:  
-                self.current_ammo -= 1
-
-
-            #Test gun
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
-                    self.gun.reload()
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                if self.gun.fire():
-                    print("Đã bắn!")
-                else:
-                    print("Hết đạn, nhấn 'R' để nạp!")
             # End Test
 
         self.screen.blit(background.menu, (0, 0))
@@ -164,19 +134,6 @@ class Menu:
 
 
     # Begin Test
-        # Heart Bar test
-
-        self.heartBar.draw(2)
-
-
-        # Ammo Counter test
-        # self.ammo_counter.draw(current_ammo=self.current_ammo)
-
-        # Vẽ cửa dựa trên trạng thái hiện tại
-        self.door.draw(self.door_state)
-
-        # Gun
-        self.gun.draw_ammo()
 
     # End Test
 
@@ -205,9 +162,11 @@ class GameOver:
         self.screen.blit(background.game_over, (300, 0))
 
         if self.playAgainButton.draw():
+            self.play_game.reset_game()
             self.state.set_state('play_game')
 
         if self.menuButton.draw():
+            self.play_game.reset_game()
             self.state.set_state('menu')
 
         
@@ -246,6 +205,7 @@ class PauseGame:
             self.state.set_state('play_game')
 
         if self.menuButton.draw():
+            self.play_game.reset_game()
             self.state.set_state('menu')
         
 
@@ -276,9 +236,11 @@ class PlayGame:
         self.appear_interval = 2000
         self.remove_interval = 2
         self.escape_count = 0
-        
+        self.max_heart = 3
+
+        self.heartBar = HealthBar(self.screen,self.max_heart)         
         self.spawners = [Spawner(screen), Spawner(screen, floor=1)]
-        self.gun = Gun(self.screen, 5)
+        self.gun = Gun(screen, ammo_capacity=10)
         
         pygame.time.set_timer(self.generate_zombie, self.appear_interval)
         pygame.time.set_timer(pygame.USEREVENT, 1000)
@@ -321,6 +283,9 @@ class PlayGame:
                         # if not TURN_OFF_SOUND:
                         #     sound.turnOn('crosshair')
 
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                    self.gun.reload()
+
 
             else:
                 self.cursor_img = background.crosshair
@@ -354,6 +319,10 @@ class PlayGame:
         self.screen.blit(self.pause_icon, (740, 15))
         # self.drawPeople()
 
+        # Vẽ heart bar and ammo
+        self.heartBar.draw()
+        self.gun.draw_ammo()
+
         
         # self.displayScore()
         # self.displayMissed()
@@ -368,5 +337,11 @@ class PlayGame:
         
     
     def reset_game(self):
-        pass
-        #TODO        
+        """Reset toàn bộ trạng thái của trò chơi."""
+        for spawner in self.spawners:
+            spawner.reset()
+
+        self.score = 0
+        self.escape_count = 0
+        self.gun.reload()
+        self.heartBar.set_current_hearts(self.max_heart)

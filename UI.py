@@ -12,18 +12,23 @@ class HealthBar:
     def __init__(self, screen, max_hearts=3):
         self.screen = screen
         self.max_hearts = max_hearts
-        
+        self.current_hearts = max_hearts  
+
         self.combatUI = image_loader(f'{IMAGE_PATH}combatUI.png', flip=False, scale=(1280, 50))
         self.heart = image_loader(f'{IMAGE_PATH}heart.png', flip=False, scale=(50, 30))
         
         self.heart_positions = [(25 + i * 80, 10) for i in range(max_hearts)]
 
-    def draw(self, current_hearts):
-        current_hearts = min(current_hearts, self.max_hearts)
-        
+    def draw(self):
         self.screen.blit(self.combatUI, (0, 0))
-        for i in range(current_hearts):
+        for i in range(self.current_hearts):
             self.screen.blit(self.heart, self.heart_positions[i])
+
+    def get_current_hearts(self):
+        return self.current_hearts
+
+    def set_current_hearts(self, hearts):
+        self.current_hearts = max(0, min(hearts, self.max_hearts))
 
 
 class AmmoCounter:
