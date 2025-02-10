@@ -5,7 +5,7 @@ import random
 from param import SCREEN_WIDTH, SCREEN_HEIGHT, GAME_NAME, IMAGE_PATH
 from utils import image_loader
 
-from people import Thief1
+
 
 from gun import Gun
 
@@ -24,6 +24,7 @@ window = pygame.display.set_mode(SCREEN_SIZE)
 
 from object import Door, DoorState
 from spawner import Spawner
+from people import Thief1
 
 class Background:
     def __init__(self):
