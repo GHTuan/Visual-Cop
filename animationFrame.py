@@ -77,3 +77,4 @@ class PeopleAnimationFrame:
     
 
 #TODO
+people1 = PeopleAnimationFrame()
