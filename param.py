@@ -1,7 +1,7 @@
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 FPS = 60
-GAME_NAME = 'Visual Cop'
+GAME_NAME = 'V Police'
 
 IMAGE_PATH = 'Sprite/'
 SOUND_PATH = 'sounds'

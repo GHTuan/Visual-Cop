@@ -11,7 +11,7 @@ class Gun:
 
         self.reset_timer = None
         self.waiting_for_reset = False
-        self.base_reload_time = 200  # Mỗi viên đạn cần 200ms để reload
+        self.base_reload_time = 300  # Mỗi viên đạn cần 200ms để reload
 
         self.font = pygame.font.Font(None, 36)
         self.reload_bar_width = 100

@@ -331,6 +331,7 @@ class PlayGame:
         for spawner in self.spawners:
             spawner.reset()
 
+        self.miss = 0
         self.score = 0
         self.escape_count = 0
         self.gun.reload()

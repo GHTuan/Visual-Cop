@@ -28,7 +28,7 @@ escape_frame_list = [
 
 
 class AnnimationFrame:
-    def __init__(self,frame_list = None, interval = 20):
+    def __init__(self,frame_list = None, interval = 5):
         self.frame_list = frame_list
         self.current_frame = 0
         self.interval = interval
@@ -53,7 +53,7 @@ class AnnimationFrame:
 
 class PeopleAnimationFrame:
     def __init__(self,spawn_frame = spawn_frame_list, idle_frame = idle_frame_list,run_frame = run_frame_list,dead_frame = dead_frame_list,escape_frame = escape_frame_list):
-        self.spawn_frame = AnnimationFrame(spawn_frame)
+        self.spawn_frame = AnnimationFrame(spawn_frame,interval = 15)
         self.idle_frame = AnnimationFrame(idle_frame)
         self.run_frame = AnnimationFrame(run_frame)
         self.dead_frame = AnnimationFrame(dead_frame)

@@ -98,13 +98,13 @@ class People:
         self.screen = screen
         self.is_dead = False
         self.state_timer_start = 0
-        self.state_timer_end = random.randint(2000, 5000)
+        self.state_timer_end = random.randint(500, 2000)
         self.check_x_moved = False
         self.check_y_moved = False
         self.direction = random.choice([-1, 1])
         self.target_x = 0
         self.target_y = 0
-        self.move_speed = 2
+        self.move_speed = random.randint(2,5)
         self.in_road = False
         self.scale = 45
 
@@ -162,7 +162,7 @@ class People:
 
             if self.check_y_moved and self.in_road:
                 # Move left or right
-                self.x += self.direction * 2
+                self.x += self.direction * self.move_speed
 
         self.draw()
 
