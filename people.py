@@ -3,7 +3,7 @@ from enum import Enum
 import random
 
 from animationFrame import PeopleAnimationFrame
-from param import IMAGE_PATH
+from param import IMAGE_PATH, SCREEN_WIDTH, SCREEN_HEIGHT
 
 from Sprite.spriteSheet import Spritesheet
 
@@ -52,12 +52,10 @@ class People:
         # margin = (self.image_size[0] / 2 ,self.image_size[1])
         # center = (self.x + margin[0], self.y + margin[1])
         if position[0] > self.x and position[1] > self.y and position[0] < self.x + image_size[0] and position[1] < self.y + image_size[1]:
-            print("Hit")
             self.change_state(PeopleState.DEAD)
             self.is_dead = True
             return True
         else:
-            print("Miss")
             return False
         
         
@@ -163,9 +161,8 @@ class People:
                         
         pass
     def is_escape(self):
-        if self.life_time ==  0:
+        if self.x < 0 or self.x > SCREEN_WIDTH or self.y < 0 or self.y > SCREEN_HEIGHT:
             return True
-        self.life_time -= 1
         return False
 
 class Thief1(People):  # Do not harm the player
@@ -184,6 +181,14 @@ class Thief2(People):  # Does damage to the player
     pass
 
 class Citizen(People):
-    pass
+    def __init__(self, screen, x, y, life_time = 15):
+        super().__init__(screen, x, y, life_time)
+        #TODO
+            # self.annimation.set_spawn_frame(...)
+            # self.annimation.set_dead_frame(...)
+            # self.annimation.set_idle_frame(...)
+            # ...
+
+        pass
     
     

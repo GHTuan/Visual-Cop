@@ -1,7 +1,7 @@
 import pygame
 import random
 
-from people import Thief1 
+from people import Thief1, PeopleState, Citizen
 from object import Door, DoorState
 
 class SpawnPoint:
@@ -55,14 +55,16 @@ class SpawnPoint:
 
     def get_coordinates(self):
         return self.x, self.y
-
-
+    
 class Spawner:
     def __init__(self, screen, floor=0, spawn_min_interval=3000, spawn_max_interval=2000, remove_interval=10000):
         self.screen = screen
+        
         self.min_interval = spawn_min_interval
         self.max_interval = spawn_max_interval
         self.remove_interval = remove_interval
+        self.remove_event = pygame.USEREVENT + 2
+        self.spawn_event = pygame.USEREVENT + 1
         
         if floor == 0:
             self.spawnpoints = [
@@ -79,7 +81,8 @@ class Spawner:
         else:
             print("Invalid floor") 
         
-        self.spawn_event = pygame.USEREVENT + 1
+        
+       
 
     def draw(self):
         for point in self.spawnpoints:
@@ -91,8 +94,13 @@ class Spawner:
             return
         
         x, y = valid_point.get_coordinates()
-        thief = Thief1(self.screen, x, y, self.screen)
-        valid_point.add_slot(thief)
+        
+        ran = random.randint(1,5)
+        if ran == 5:
+            person = Citizen(self.screen, x, y, self.screen)
+        else: person = Thief1(self.screen, x, y, self.screen)
+        
+        valid_point.add_slot(person)
 
     def get_valid_spawnpoint(self):
         points = [point for point in self.spawnpoints if point.not_full()]
@@ -101,23 +109,34 @@ class Spawner:
         return None
 
     def remove(self):
-        # Check if People is dead or escaped
-        
-        #...
-        pass
-    
+        for point in self.spawnpoints:
+            for person in point.get_people():
+                if person.is_escape():
+                    point.remove_slot(person)
+                    if type(person) is Thief1:
+                        print("Thief escape")
+                        return True
+                    else: return False
+
     
     def update(self, event):
         if event.type == self.spawn_event:
             self.spawn()
-                    
+        if event.type == self.remove_event:
+            if self.remove(): return True
+        return False
+    
     def handle_click(self, position):
         for point in self.spawnpoints:
             for person in point.get_people():
                 if person.check_colision(position):
                     point.remove_slot(person)
-                    return True
-        return False
+                    if type(person) is Thief1:
+                        return 1
+                    else:
+                        print("citizen")
+                        return 2
+        return 0
     
     def reset(self):
         """Xóa tất cả nhân vật và đóng cửa."""

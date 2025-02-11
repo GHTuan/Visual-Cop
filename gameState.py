@@ -172,13 +172,11 @@ class GameOver:
 
         
 # Please fix
-        # score_text = self.font.render("Score: " + str(self.play_game.getScore()), True, WHITE)
-        score_text = self.font.render("Score: 1", True, BLUE)
+        score_text = self.font.render("Score: " + str(self.play_game.get_score()), True, WHITE)
         score_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, 300))
         self.screen.blit(score_text, score_rect)
         
-        # missed_text = self.font.render("Missed: " + str(self.play_game.escape_count), True, WHITE)
-        missed_text = self.font.render("Missed: 1", True, BLUE)
+        missed_text = self.font.render("Missed: " + str(self.play_game.get_miss()), True, WHITE)
         missed_rect = missed_text.get_rect(center=(SCREEN_WIDTH // 2, 400))
         self.screen.blit(missed_text, missed_rect)
 
@@ -232,10 +230,11 @@ class PlayGame:
         
         self.font = pygame.font.Font('fonts/m5x7.ttf', 50)
         self.score = 0
+        self.miss = 0
         self.people = []
-        self.generate_zombie = pygame.USEREVENT + 1
+        self.spawn_event = pygame.USEREVENT + 1
+        self.remove_event = pygame.USEREVENT + 2
         self.appear_interval = 2000
-        self.remove_interval = 2
         self.escape_count = 0
         self.max_heart = 3
 
@@ -243,9 +242,10 @@ class PlayGame:
         self.spawners = [Spawner(screen), Spawner(screen, floor=1)]
         self.gun = Gun(screen, ammo_capacity=10)
         
-        pygame.time.set_timer(self.generate_zombie, self.appear_interval)
+        pygame.time.set_timer(self.spawn_event, self.appear_interval)
         pygame.time.set_timer(pygame.USEREVENT, 1000)
-        pygame.time.set_timer(self.remove_interval, 1000)
+        pygame.time.set_timer(self.remove_event, 1000)
+        
 
 
     
@@ -256,8 +256,18 @@ class PlayGame:
 
         if self.gun.fire():
             for spawner in self.spawners:
-                if spawner.handle_click(position):
+                check = spawner.handle_click(position)
+                if check == 1:
+                    print("Thief Hit")
                     self.score += 1
+                    return
+                elif check == 2:
+                    self.heartBar.set_current_hearts(self.heartBar.get_current_hearts() - 1)
+                    self.check_gameover()
+                    return
+            print("Hit Nothing!")
+            self.miss += 1
+                   
         else:
             print("Out of ammo!")
         
@@ -291,11 +301,7 @@ class PlayGame:
             else:
                 self.cursor_img = background.crosshair
                     
-           
-            if event.type == self.remove_interval:
-                # self.removeZombie()
-                pass
-            
+          
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_p or event.key == pygame.K_SPACE:
                     self.state.set_state('pause')
@@ -303,7 +309,8 @@ class PlayGame:
                     self.gun.reload()
             
             for spawner in self.spawners:
-                spawner.update(event)
+                if spawner.update(event):
+                    self.handle_escape()
         
         self.screen.blit(background.background, (0, 0))
 
@@ -346,3 +353,13 @@ class PlayGame:
         self.escape_count = 0
         self.gun.reload()
         self.heartBar.set_current_hearts(self.max_heart)
+    def handle_escape(self):
+        self.heartBar.set_current_hearts(self.heartBar.get_current_hearts() - 1)
+        self.check_gameover()
+    def check_gameover(self):
+        if self.heartBar.get_current_hearts() <= 0:
+            self.state.set_state('game_over')
+    def get_score(self):
+        return self.score
+    def get_miss(self):
+        return self.miss
