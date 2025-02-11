@@ -3,7 +3,7 @@ from enum import Enum
 import random
 
 from animationFrame import PeopleAnimationFrame
-from param import IMAGE_PATH
+from param import IMAGE_PATH, SCREEN_WIDTH, SCREEN_HEIGHT
 
 from Sprite.spriteSheet import Spritesheet
 
@@ -81,14 +81,13 @@ class People:
             return False
 
         image_size = self.annimation.get_curent_state().get_current_frame().get_size()
-        if (position[0] > self.x and position[1] > self.y and
-            position[0] < self.x + image_size[0] and position[1] < self.y + image_size[1]):
-            print("Hit")
+        # margin = (self.image_size[0] / 2 ,self.image_size[1])
+        # center = (self.x + margin[0], self.y + margin[1])
+        if position[0] > self.x and position[1] > self.y and position[0] < self.x + image_size[0] and position[1] < self.y + image_size[1]:
             self.change_state(PeopleState.DEAD)
             self.is_dead = True
             return True
         else:
-            print("Miss")
             return False
 
     def update(self):
@@ -185,9 +184,8 @@ class People:
                 print("Escaped!")
 
     def is_escape(self):
-        if self.life_time == 0:
+        if self.x < 0 or self.x > SCREEN_WIDTH or self.y < 0 or self.y > SCREEN_HEIGHT:
             return True
-        self.life_time -= 1
         return False
 
 
