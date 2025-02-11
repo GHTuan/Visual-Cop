@@ -11,7 +11,8 @@ class Sound:
         "intro": pygame.mixer.Sound('sounds/typing.wav'),
         "dead": pygame.mixer.Sound('sounds/dead.mp3'),
         "shoot": pygame.mixer.Sound('sounds/shoot.mp3'),
-        "reload": pygame.mixer.Sound('sounds/reload_gun.mp3')
+        "reload": pygame.mixer.Sound('sounds/reload_gun.mp3'),
+        "miss" : pygame.mixer.Sound('sounds/miss.mp3')
     }
     
     # Kênh riêng cho từng loại âm thanh
@@ -20,7 +21,8 @@ class Sound:
         "shoot": pygame.mixer.Channel(1),
         "dead": pygame.mixer.Channel(2),
         "reload": pygame.mixer.Channel(3),
-        "effects": pygame.mixer.Channel(4)  # Dùng cho các âm thanh khác như intro
+        "effects": pygame.mixer.Channel(4),
+        "miss": pygame.mixer.Channel(5)# Dùng cho các âm thanh khác như intro
     }
 
     SOUND_OFF = False  
@@ -28,7 +30,7 @@ class Sound:
     VOLUME_SHOOT = 0.1
     VOLUME_DEAD = 0.5
     VOLUME_RELOAD = 0.8
-
+    VOLUME_MISS = 0.5
     @classmethod
     def set_volume(cls, type, volume):
         """Đặt âm lượng cho một loại âm thanh"""
@@ -42,7 +44,9 @@ class Sound:
             cls.VOLUME_DEAD = volume
         elif type == "reload":
             cls.VOLUME_RELOAD = volume
-
+        elif type == "miss":
+            cls.VOLUME_RELOAD = volume
+            
     @classmethod
     def turnOn(cls, type):
         """Phát âm thanh theo loại với kênh riêng"""
@@ -61,8 +65,12 @@ class Sound:
         elif type == "reload":
             cls.sounds["reload"].set_volume(cls.VOLUME_RELOAD)
             cls.channels["reload"].play(cls.sounds["reload"])
-        else:
+        elif type == "effect":
             cls.channels["effects"].play(cls.sounds[type])
+        else:
+            cls.sounds["dead"].set_volume(cls.VOLUME_MISS)
+            cls.channels["miss"].play(cls.sounds["miss"])
+            
 
     @classmethod
     def turnOff(cls, type):

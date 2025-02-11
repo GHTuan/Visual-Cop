@@ -130,10 +130,11 @@ class Spawner:
         for point in self.spawnpoints:
             for person in point.get_people():
                 if person.check_colision(position):
-                    Sound.turnOn('dead')
                     if type(person) is Thief1:
+                        Sound.turnOn('dead')
                         return 1
                     else:
+                        Sound.turnOn('miss')
                         return 2
         return 0
     
