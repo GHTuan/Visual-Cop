@@ -102,7 +102,6 @@ class People:
         self.check_x_moved = False
         self.check_y_moved = False
         self.direction = random.choice([-1, 1])
-        # self.direction_in_road = random.choice([-1, 1])
         self.target_x = 0
         self.target_y = 0
         self.move_speed = 2
@@ -129,22 +128,22 @@ class People:
     def update(self):
         if self.state == PeopleState.RUN:
             if not self.check_y_moved:
-                if self.y >= 426:  # Floor 1
-                    self.target_y = 630
+                if self.y >= 436:  # Floor 1
+                    self.target_y = 610
                     self.check_y_moved = True
                 else:  # Floor 2
-                    self.target_y = 385
+                    self.target_y = 365
                     if self.check_x_moved:
-                        self.target_y = 630
+                        self.target_y = 610
                     else:
-                        if self.x >= 174 and self.x <= 1100:
+                        if self.x >= 154 and self.x <= 1085:
                             if self.direction == -1:
-                                self.target_x = 174
+                                self.target_x = 154
                             elif self.direction == 1:
-                                self.target_x = 1100
-            if self.x <= 174 or self.x >= 1100:
-                self.target_y = 630
-            if self.y == 630:
+                                self.target_x = 1085
+            if self.x <= 154 or self.x >= 1085:
+                self.target_y = 610
+            if self.y == 610:
                 self.in_road = True
             else:
                 # For render movement
@@ -174,7 +173,7 @@ class People:
 
         if self.state == PeopleState.SPAWN:
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (45, 45)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
 
@@ -188,7 +187,7 @@ class People:
 
         elif self.state == PeopleState.IDLE:
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (45, 45)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
             self.change_state(PeopleState.RUN)
@@ -196,7 +195,7 @@ class People:
 
         elif self.state == PeopleState.RUN:
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (45, 45)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
 
@@ -206,13 +205,13 @@ class People:
             #     self.is_dead = True
 
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (45, 45)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
 
         elif self.state == PeopleState.ESCAPE:
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (45, 45)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
 
