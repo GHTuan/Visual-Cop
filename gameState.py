@@ -9,7 +9,7 @@ from utils import image_loader
 
 from gun import Gun
 
-from UI import Button, HealthBar
+from UI import Button, HealthBar, ScoreDisplay, MissDisplay
 from sound import Sound
 
 BLACK = (0, 0, 0)
@@ -22,9 +22,7 @@ SCREEN_SIZE = ((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 window = pygame.display.set_mode(SCREEN_SIZE)
 
-from object import Door, DoorState
 from spawner import Spawner
-from people import Thief1
 
 class Background:
     def __init__(self):
@@ -226,7 +224,7 @@ class PlayGame:
         self.cursor_img = background.crosshair
         self.cursor_rect = self.cursor_img.get_rect()
         self.pause_icon = background.pause
-        self.pause_icon_rect = self.pause_icon.get_rect(topleft=(750, 10))
+        self.pause_icon_rect = self.pause_icon.get_rect(topleft=(1240, 15))
         
         self.font = pygame.font.Font('fonts/m5x7.ttf', 50)
         self.score = 0
@@ -241,6 +239,8 @@ class PlayGame:
         self.heartBar = HealthBar(self.screen,self.max_heart)         
         self.spawners = [Spawner(screen), Spawner(screen, floor=1)]
         self.gun = Gun(screen, ammo_capacity=10)
+        self.score_display = ScoreDisplay(screen)
+        self.miss_display = MissDisplay(screen)
         
         pygame.time.set_timer(self.spawn_event, self.appear_interval)
         pygame.time.set_timer(pygame.USEREVENT, 1000)
@@ -284,8 +284,6 @@ class PlayGame:
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-
-                    # self.cursor_img = background.click_sword
                     click_position = pygame.mouse.get_pos()
                     if self.pause_icon_rect.collidepoint(click_position):
                         self.state.set_state('pause')
@@ -297,11 +295,9 @@ class PlayGame:
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                     self.gun.reload()
 
-
             else:
                 self.cursor_img = background.crosshair
                     
-          
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_p or event.key == pygame.K_SPACE:
                     self.state.set_state('pause')
@@ -324,17 +320,15 @@ class PlayGame:
         # Vẽ hình ảnh building vào screen
         self.screen.blit(background.building, building_rect.topleft)
 
-        self.screen.blit(self.pause_icon, (740, 15))
-        # self.drawPeople()
-
         # Vẽ heart bar and ammo
         self.heartBar.draw()
         self.gun.draw_ammo()
 
+        self.screen.blit(self.pause_icon, (1240, 15))
         
-        # self.displayScore()
-        # self.displayMissed()
-        # self.displayTime()
+        self.score_display.draw(self.score)
+        self.miss_display.draw(self.miss)
+        
         for spawner in self.spawners:
             spawner.draw()
         

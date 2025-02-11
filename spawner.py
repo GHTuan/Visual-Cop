@@ -97,8 +97,8 @@ class Spawner:
         
         ran = random.randint(1,5)
         if ran == 5:
-            person = Citizen(self.screen, x, y, self.screen)
-        else: person = Thief1(self.screen, x, y, self.screen)
+            person = Citizen(self.screen, x - 5, y + 10, self.screen)
+        else: person = Thief1(self.screen, x - 5, y + 10, self.screen)
         
         valid_point.add_slot(person)
 
@@ -114,9 +114,10 @@ class Spawner:
                 if person.is_escape():
                     point.remove_slot(person)
                     if type(person) is Thief1:
-                        print("Thief escape")
                         return True
                     else: return False
+                elif person.is_not_good():
+                    point.remove_slot(person)
 
     
     def update(self, event):

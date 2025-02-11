@@ -46,6 +46,9 @@ class AnnimationFrame:
         return self.frame_list[self.current_frame]
     def reset_frame(self):
         self.current_frame = 0
+    def is_finish(self):
+        return self.current_frame == len(self.frame_list) - 1
+            
         
 
 class PeopleAnimationFrame:
@@ -73,6 +76,8 @@ class PeopleAnimationFrame:
         self.escape_frame.reset_frame()
     def get_curent_state(self):
         return self.current_frame
+    def is_finish(self):
+        return self.current_frame.is_finish()
         
     
 

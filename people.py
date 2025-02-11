@@ -107,6 +107,7 @@ class People:
         self.target_y = 0
         self.move_speed = 2
         self.in_road = False
+        self.scale = 45
 
     def change_state(self, new_state):
         self.state = new_state
@@ -115,10 +116,7 @@ class People:
         if self.is_dead:  # already dead
             return False
 
-        image_size = self.annimation.get_curent_state().get_current_frame().get_size()
-        # margin = (self.image_size[0] / 2 ,self.image_size[1])
-        # center = (self.x + margin[0], self.y + margin[1])
-        if position[0] > self.x and position[1] > self.y and position[0] < self.x + image_size[0] and position[1] < self.y + image_size[1]:
+        if position[0] > self.x and position[1] > self.y and position[0] < self.x + self.scale and position[1] < self.y + self.scale:
             self.change_state(PeopleState.DEAD)
             self.is_dead = True
             self.annimation.set_dead_frame()
@@ -174,7 +172,7 @@ class People:
 
         if self.state == PeopleState.SPAWN:
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (self.scale, self.scale)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
 
@@ -188,7 +186,7 @@ class People:
 
         elif self.state == PeopleState.IDLE:
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (self.scale, self.scale)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
             self.change_state(PeopleState.RUN)
@@ -196,7 +194,7 @@ class People:
 
         elif self.state == PeopleState.RUN:
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (self.scale, self.scale)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
 
@@ -204,15 +202,18 @@ class People:
             # if not self.is_dead:
             #     self.annimation.set_dead_frame()
             #     self.is_dead = True
-
+            if self.annimation.is_finish():
+                self.change_state(PeopleState.NONE)
+            
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (self.scale, self.scale)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
+            
 
         elif self.state == PeopleState.ESCAPE:
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (self.scale, self.scale)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
 
@@ -223,16 +224,12 @@ class People:
         if self.x < 0 or self.x > SCREEN_WIDTH or self.y < 0 or self.y > SCREEN_HEIGHT:
             return True
         return False
+    
+    def is_not_good(self):
+        if self.state == PeopleState.NONE:
+            return True
+        return False
 
-
-# class Thief1(People):  # Does not harm the player
-#     def __init__(self, screen, x, y, life_time=15):
-#         super().__init__(screen, x, y, life_time)
-#         self.annimation.set_spawn_frame()
-#         self.annimation.set_idle_frame()
-#         self.annimation.set_run_frame()
-#         self.annimation.set_dead_frame()
-#         self.annimation.set_escape_frame()
 
 
 class Thief1(People):

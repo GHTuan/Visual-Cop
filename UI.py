@@ -4,6 +4,7 @@ from utils import image_loader
 from param import IMAGE_PATH
 from sound import Sound
 
+WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 BLUE = (0,0,160)
 RED = (255,0,0)
@@ -127,4 +128,23 @@ class Button:
         
         return action
 
+class ScoreDisplay:
+    def __init__(self,screen):
+        self.screen = screen
+        self.font = pygame.font.Font('fonts/m5x7.ttf', 50)
+        self.x = 20
+        self.y = 50
+    def draw(self,score):
+        display_text = self.font.render("Score: " + str(score), True, WHITE)
+        self.screen.blit(display_text,(self.x,self.y))
+
+class MissDisplay:
+    def __init__(self,screen):
+        self.screen = screen
+        self.font = pygame.font.Font('fonts/m5x7.ttf', 50)
+        self.x = 20
+        self.y = 80
+    def draw(self,miss):
+        display_text = self.font.render("Miss: " + str(miss), True, WHITE)
+        self.screen.blit(display_text,(self.x,self.y))
         
