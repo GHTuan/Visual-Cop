@@ -185,7 +185,7 @@ class People:
 
         elif self.state == PeopleState.IDLE:
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (self.scale, self.scale)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
             self.change_state(PeopleState.RUN)
@@ -193,7 +193,7 @@ class People:
 
         elif self.state == PeopleState.RUN:
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (self.scale, self.scale)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
 
@@ -205,14 +205,14 @@ class People:
                 self.change_state(PeopleState.NONE)
             
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (self.scale, self.scale)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
             
 
         elif self.state == PeopleState.ESCAPE:
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
-            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
+            self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (self.scale, self.scale)), 
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
 
