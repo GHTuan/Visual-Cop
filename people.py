@@ -8,6 +8,7 @@ from param import IMAGE_PATH, SCREEN_WIDTH, SCREEN_HEIGHT
 from Sprite.spriteSheet import Spritesheet
 
 thiefSpriteSheet = Spritesheet(f'Sprite/thief/npc_thief-sheet.png')
+civilianSpriteSheet = Spritesheet(f'Sprite/civilian/npcs-civilian-sheet.png')
 
 thief_spawn_frames = [
     thiefSpriteSheet.parse_sprite('spawn1'),
@@ -41,6 +42,40 @@ thief_dead_frames = [
     thiefSpriteSheet.parse_sprite('dead4'),
     thiefSpriteSheet.parse_sprite('dead5'),
     thiefSpriteSheet.parse_sprite('dead6'),
+]
+
+civilian_spawn_frames = [
+    civilianSpriteSheet.parse_sprite('spawn1'),
+    civilianSpriteSheet.parse_sprite('spawn2'),
+    civilianSpriteSheet.parse_sprite('spawn3'),
+]
+
+civilian_idle_frames = [
+    civilianSpriteSheet.parse_sprite('idle1'),
+    civilianSpriteSheet.parse_sprite('idle2'),
+]
+
+civilian_right_run_frames = [
+    civilianSpriteSheet.parse_sprite('right_run1'),
+    civilianSpriteSheet.parse_sprite('right_run2'),
+    civilianSpriteSheet.parse_sprite('right_run3'),
+    civilianSpriteSheet.parse_sprite('right_run4'),
+]
+
+civilian_left_run_frames = [
+    civilianSpriteSheet.parse_sprite('left_run1'),
+    civilianSpriteSheet.parse_sprite('left_run2'),
+    civilianSpriteSheet.parse_sprite('left_run3'),
+    civilianSpriteSheet.parse_sprite('left_run4'),
+]
+
+civilian_dead_frames = [
+    civilianSpriteSheet.parse_sprite('dead1'),
+    civilianSpriteSheet.parse_sprite('dead2'),
+    civilianSpriteSheet.parse_sprite('dead3'),
+    civilianSpriteSheet.parse_sprite('dead4'),
+    civilianSpriteSheet.parse_sprite('dead5'),
+    civilianSpriteSheet.parse_sprite('dead6'),
 ]
 
 class PeopleState(Enum):
@@ -86,6 +121,7 @@ class People:
         if position[0] > self.x and position[1] > self.y and position[0] < self.x + image_size[0] and position[1] < self.y + image_size[1]:
             self.change_state(PeopleState.DEAD)
             self.is_dead = True
+            self.annimation.set_dead_frame()
             return True
         else:
             return False
@@ -165,9 +201,9 @@ class People:
             self.annimation.get_curent_state().next_frame()
 
         elif self.state == PeopleState.DEAD:
-            if not self.is_dead:
-                self.annimation.set_dead_frame()
-                self.is_dead = True
+            # if not self.is_dead:
+            #     self.annimation.set_dead_frame()
+            #     self.is_dead = True
 
             # self.screen.blit(self.annimation.get_curent_state().get_current_frame(), (self.x, self.y))
             self.screen.blit(pygame.transform.scale(self.annimation.get_curent_state().get_current_frame(), (48, 48)), 
@@ -209,11 +245,12 @@ class Thief1(People):
             run_frame=thief_right_run_frames if self.direction == 1 else thief_left_run_frames,
             dead_frame=thief_dead_frames
         )
-# class Citizen(People):
-#     def __init__(self, screen, x, y, life_time=15):
-#         super().__init__(screen, x, y, life_time)
-#         self.annimation.set_spawn_frame()
-#         self.annimation.set_idle_frame()
-#         self.annimation.set_run_frame()
-#         self.annimation.set_dead_frame()
-#         self.annimation.set_escape_frame()
+class Citizen(People):
+    def __init__(self, screen, x, y, life_time=15):
+        super().__init__(screen, x, y, life_time)
+        self.annimation = PeopleAnimationFrame(
+            spawn_frame=civilian_spawn_frames,
+            idle_frame=civilian_idle_frames,
+            run_frame=civilian_right_run_frames if self.direction == 1 else civilian_left_run_frames,
+            dead_frame=civilian_dead_frames
+        )

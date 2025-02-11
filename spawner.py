@@ -130,7 +130,7 @@ class Spawner:
         for point in self.spawnpoints:
             for person in point.get_people():
                 if person.check_colision(position):
-                    point.remove_slot(person)
+                    # point.remove_slot(person)
                     if type(person) is Thief1:
                         return 1
                     else:

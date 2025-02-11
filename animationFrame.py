@@ -28,7 +28,7 @@ escape_frame_list = [
 
 
 class AnnimationFrame:
-    def __init__(self,frame_list = None, interval = 2000):
+    def __init__(self,frame_list = None, interval = 20):
         self.frame_list = frame_list
         self.current_frame = 0
         self.interval = interval
