@@ -23,7 +23,7 @@ class Sound:
         "effects": pygame.mixer.Channel(4)  # Dùng cho các âm thanh khác như intro
     }
 
-    SOUND_OFF = True  
+    SOUND_OFF = False  
     VOLUME_BACKGROUND = 0.2
     VOLUME_SHOOT = 0.1
     VOLUME_DEAD = 0.5

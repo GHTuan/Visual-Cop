@@ -216,8 +216,6 @@ class People:
             (self.x, self.y))
             self.annimation.get_curent_state().next_frame()
 
-            if self.is_escape():
-                print("Escaped!")
 
     def is_escape(self):
         if self.x < 0 or self.x > SCREEN_WIDTH or self.y < 0 or self.y > SCREEN_HEIGHT:

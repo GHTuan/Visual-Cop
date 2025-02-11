@@ -48,7 +48,6 @@ class Gun:
         if not self.waiting_for_reset and self.current_ammo > 0:
             self.current_ammo -= 1
             Sound.turnOn("shoot")
-            Sound.turnOn('dead')
             if self.current_ammo == 0:
                 self.reload()
             return True

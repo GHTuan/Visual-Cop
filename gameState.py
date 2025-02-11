@@ -250,29 +250,17 @@ class PlayGame:
 
     
     def handle_click(self,position):
-        print('Click at: ', position[0], position[1])
-        
-        print(self.gun.get_current_ammo())
-
         if self.gun.fire():
             for spawner in self.spawners:
                 check = spawner.handle_click(position)
                 if check == 1:
-                    print("Thief Hit")
                     self.score += 1
                     return
                 elif check == 2:
                     self.heartBar.set_current_hearts(self.heartBar.get_current_hearts() - 1)
                     self.check_gameover()
                     return
-            print("Hit Nothing!")
             self.miss += 1
-                   
-        else:
-            print("Out of ammo!")
-        
-        # TODO
-        pass
 
 
     
@@ -297,7 +285,7 @@ class PlayGame:
 
             else:
                 self.cursor_img = background.crosshair
-                    
+                
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_p or event.key == pygame.K_SPACE:
                     self.state.set_state('pause')

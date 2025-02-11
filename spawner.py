@@ -3,6 +3,7 @@ import random
 
 from people import Thief1, PeopleState, Citizen
 from object import Door, DoorState
+from sound import Sound
 
 class SpawnPoint:
     def __init__(self, screen, x, y, slot=1):
@@ -81,8 +82,6 @@ class Spawner:
         else:
             print("Invalid floor") 
         
-        
-       
 
     def draw(self):
         for point in self.spawnpoints:
@@ -131,11 +130,10 @@ class Spawner:
         for point in self.spawnpoints:
             for person in point.get_people():
                 if person.check_colision(position):
-                    # point.remove_slot(person)
+                    Sound.turnOn('dead')
                     if type(person) is Thief1:
                         return 1
                     else:
-                        print("citizen")
                         return 2
         return 0
     
